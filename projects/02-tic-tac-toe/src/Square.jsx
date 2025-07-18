@@ -1,5 +1,10 @@
 import React from 'react';
 
-export function Square(){
- //TODO all the square logic
+export function Square({children, index}){
+ return (
+  <div className='square'>
+    {index}
+    {children}
+  </div>
+ )
 }
