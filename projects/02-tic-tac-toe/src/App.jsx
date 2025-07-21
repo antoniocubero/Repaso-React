@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 import './index.css'
-import { Square } from './Square';
+import { Square } from './components/Square';
+import { WinnerShow } from './components/WinnerShow';
 import {TURNS, WINNING_COMBINATIONS} from './constants';
 
 function App() {
@@ -36,7 +37,11 @@ function App() {
     }
   }
 
-  const winnerText = winner == false ? 'Empate' : 'Ganó: '
+  const resetGame =()=>{
+    setBoard(Array(9).fill(null))
+    setTurn(TURNS.X)
+    setWinner(null)
+  }
 
   const checkWinner = (boardToCheck)=>{
     for (const combo of WINNING_COMBINATIONS) {
@@ -58,6 +63,7 @@ function App() {
     <>
       <main className='board'>
         <h1>Tic tac toe</h1>
+        <button onClick={resetGame}>Reiniciar partida</button>
         <section className='game'>
           {board.map((value, index) => (
             <Square 
@@ -77,14 +83,7 @@ function App() {
             {TURNS.X}
           </Square>
         </section>
-        <section className='winner'>
-          <div className='text'>
-            <h2>{winnerText}</h2>
-            <header className='win'>
-              {winner && <Square>{winner}</Square>}
-            </header>
-          </div>
-        </section>
+          <WinnerShow resetGame={resetGame} winner={winner}/>
       </main>
     </>
   )
