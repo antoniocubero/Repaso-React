@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import './index.css'
 import { Square } from './components/Square';
@@ -7,9 +7,24 @@ import {TURNS, WINNING_COMBINATIONS} from './constants';
 
 function App() {
   //TODO: Reset de partida
-  const [board, setBoard] = useState(Array(9).fill(null));
+  const [board, setBoard] = useState(()=>{
+      const boardStored = window.localStorage.getItem('board')
+      if(boardStored){
+        return JSON.parse(boardStored)
+      }else{
+        return Array(9).fill(null)
+      }
+    }
+  );
 
-  const [turn, setTurn] = useState(TURNS.X);
+  const [turn, setTurn] = useState(()=>{
+    const turnStored = window.localStorage.getItem('turn')
+    if(turnStored){
+      return turnStored
+    }else{
+      return TURNS.X
+    }
+  });
 
   const [winner, setWinner] = useState(null)
 
@@ -41,6 +56,7 @@ function App() {
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
+    resetGameStorage()
   }
 
   const checkWinner = (boardToCheck)=>{
@@ -58,6 +74,20 @@ function App() {
   function checkFullBoard(boardToCheck){
     return boardToCheck.every((square)=>square !== null)
   }
+
+  const saveGameToStorage=(board, turn)=>{
+    window.localStorage.setItem('board', JSON.stringify(board))
+    window.localStorage.setItem('turn', turn)
+  }
+
+  const resetGameStorage=()=>{
+    window.localStorage.removeItem('board')
+    window.localStorage.removeItem('turn')
+  }
+
+  useEffect(()=>{
+    saveGameToStorage(board, turn)
+  },[turn])
 
   return (
     <>
