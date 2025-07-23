@@ -6,7 +6,6 @@ import { WinnerShow } from './components/WinnerShow';
 import {TURNS, WINNING_COMBINATIONS} from './constants';
 
 function App() {
-  //TODO: Reset de partida
   const [board, setBoard] = useState(()=>{
       const boardStored = window.localStorage.getItem('board')
       if(boardStored){
