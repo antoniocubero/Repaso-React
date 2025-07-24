@@ -1,33 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [position, setPosition] = useState({x:0, y:0})
+  const [enable, setEnable] = useState(false)
+
+  useEffect(()=>{
+    const handleMove = (event)=>{
+      setPosition({x:event.clientX, y:event.clientY})
+    }
+    if (enable) {
+      window.addEventListener('pointermove', handleMove)
+    }
+
+    return ()=>{
+      window.removeEventListener('pointermove', handleMove)
+    }
+  },[enable])
+
+  const clickHandle = ()=>{
+    setEnable(!enable)
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div
+        style={{
+          width:40,
+          height:40,
+          backgroundColor:'#a5a',
+          position:'absolute',
+          top: position.y-20,
+          left: position.x-20,
+          borderRadius:'50%',
+          pointerEvents:'none',
+          opacity:0.6,
+          filter:'blur(3px)'
+        }}/>
+        <button onClick={clickHandle}>{enable ? 'Desactivar': 'Activar'} movimiento</button>
     </>
   )
 }
